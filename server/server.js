@@ -1,4 +1,5 @@
 // import external modules
+const {ObjectID} = require("mongodb");
 const express = require("express");
 const bodyParser = require("body-parser");
 
@@ -32,6 +33,27 @@ app.get("/todos", (req, res) => {
     }, (err) => {
       res.status(400).send(err);
     });
+});
+
+app.get("/todos/:id", (req, res) => {
+  var id = req.params.id;
+  // Check for Valid ID using isValid()
+  if(!ObjectID.isValid(id)) {
+  // if not valid send respond with 404 status code with empty todo body array
+    return res.status(404).send();
+  }
+  // findById()
+  Todo.findById(id).then((todo) => {
+    // if success
+    if(!todo) {
+      // if no todo - send back 404 with empty body
+      return res.status(404).send();
+    }
+    // respond back with todo body
+    res.send({todo});
+  }).catch((err) => {
+    res.status(400).send();
+  });
 });
 
 app.listen(3000, () => {
