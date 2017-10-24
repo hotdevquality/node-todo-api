@@ -1,3 +1,5 @@
+require("./config/config");
+
 // import external modules
 const _ = require("lodash");
 const {ObjectID} = require("mongodb");
