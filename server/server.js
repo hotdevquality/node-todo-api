@@ -13,6 +13,7 @@ var app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+var id;
 
 app.post("/todos", (req, res) => {
   //console.log(req.body);
@@ -39,7 +40,7 @@ app.get("/todos", (req, res) => {
 });
 
 app.get("/todos/:id", (req, res) => {
-  var id = req.params.id;
+  id = req.params.id;
   // Check for Valid ID using isValid()
   if(!ObjectID.isValid(id)) {
   // if not valid send respond with 404 status code with empty todo body array
@@ -57,6 +58,20 @@ app.get("/todos/:id", (req, res) => {
   }).catch((err) => {
     res.status(400).send();
   });
+});
+
+app.delete("/todos/:id", (req, res) => {
+  id = req.params.id;
+  if(!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  Todo.findByIdAndRemove(id).then((todo) => {
+    if(!todo) {
+      return res.status(404).send();
+    }
+    res.status(200).send({todo})
+  }).catch((err) => res.status(400).send());
 });
 
 app.listen(port, () => {
