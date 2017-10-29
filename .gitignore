@@ -1,3 +1,4 @@
 node_modules/
-version/
+server/version/
 package-lock.json
+server/config/config.json
